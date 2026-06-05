@@ -24,7 +24,7 @@
     <assertj.version>3.27.7</assertj.version>
     <flyway.version>11.20.1</flyway.version>
     <hikari.version>7.0.2</hikari.version>
-    <jackson.version>2.21.1</jackson.version>
+    <jackson.version>2.22.0</jackson.version>
     <javalin.version>7.2.2</javalin.version>
     <jooq.version>3.21.3</jooq.version>
     <junit.version>5.14.4</junit.version>
