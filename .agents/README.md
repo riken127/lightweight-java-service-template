@@ -11,3 +11,12 @@ Start here:
 5. Read `dependency-policy.md` before touching dependencies.
 
 The goal is to make agent behavior predictable: small changes, clear boundaries, no framework drift, no fake product code.
+
+Also check the repository hygiene files when relevant:
+
+- `CONTRIBUTING.md`
+- `SECURITY.md`
+- `CODEOWNERS`
+- `.github/pull_request_template.md`
+- `.github/ISSUE_TEMPLATE/`
+- `.github/dependabot.yml`

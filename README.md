@@ -4,6 +4,18 @@ A GitHub template repository for small Java microservices that need a clear star
 
 This is a template, not a framework. Click **Use this template**, rename the service, set your package name, run the tests, and start replacing the tiny technical example with your service code.
 
+Suggested GitHub description:
+
+```txt
+Lightweight Java 25 microservice template with Maven, Javalin, jOOQ, PostgreSQL, Flyway, Testcontainers, and Google Java Style.
+```
+
+Suggested GitHub topics:
+
+```txt
+java, microservice-template, maven, javalin, jooq, postgresql, flyway, testcontainers, google-java-format, no-spring
+```
+
 ## Philosophy
 
 This template is intentionally small.
@@ -51,7 +63,9 @@ The chosen structure is a root Maven parent with one deployable `app` module:
 │   ├── pom.xml
 │   └── src/
 ├── pom.xml
+├── Makefile
 ├── docker-compose.yml
+├── Dockerfile
 └── README.md
 ```
 
@@ -132,6 +146,8 @@ Configuration is read from environment variables with safe local defaults:
 
 Do not commit real secrets. Use your deployment platform's secret manager or environment injection.
 
+Copy `.env.example` if you want a local shell reference, but do not commit real `.env` files.
+
 ## Run Locally
 
 Start PostgreSQL:
@@ -159,6 +175,12 @@ Then call:
 curl http://localhost:8080/health
 curl http://localhost:8080/ready
 curl http://localhost:8080/v1/example
+```
+
+You can also smoke-test the default local endpoints:
+
+```bash
+make smoke
 ```
 
 ## Run Tests
@@ -283,6 +305,24 @@ make lint
 make verify
 ```
 
+## Container Image
+
+Build a local image:
+
+```bash
+make docker-build
+```
+
+Run it against the local Docker Compose PostgreSQL service from the host network as appropriate for your Docker environment. The image expects the same environment variables documented above.
+
+Useful JVM runtime override:
+
+```bash
+JAVA_OPTS="-XX:MaxRAMPercentage=75 -XX:InitialRAMPercentage=25"
+```
+
+The container image is intentionally minimal: no Kubernetes manifests, Helm charts, service mesh configuration, or registry publishing workflow are included.
+
 ## Intentional Omissions
 
 - No dependency injection framework: manual constructor wiring is enough here.
@@ -292,6 +332,7 @@ make verify
 - No authentication: security should be service- and platform-specific.
 - No distributed tracing: add OpenTelemetry when the runtime environment supports it.
 - No custom formatter rules: Google Java Format and Google Checkstyle are used as-is.
+- No registry publishing workflow: image registries and release processes vary by team.
 
 ## Design Principles
 
@@ -303,6 +344,25 @@ make verify
 - Domain code stays framework-free.
 - Tests should be readable and proportional to risk.
 - Prefer deleting the example code over generalizing it prematurely.
+
+## Repository Governance
+
+This template includes:
+
+- `LICENSE`: MIT license for reuse.
+- `CONTRIBUTING.md`: contribution workflow.
+- `SECURITY.md`: vulnerability reporting expectations.
+- `CODEOWNERS`: default ownership placeholder.
+- Dependabot configuration for Maven, GitHub Actions, and Docker.
+- Pull request and issue templates.
+- `.agents/`: AI-oriented repository guidance.
+
+Recommended branch protection for GitHub:
+
+- Require pull requests before merging.
+- Require the `CI` workflow.
+- Require branches to be up to date before merging.
+- Require CODEOWNERS review if using this template in an organization.
 
 ## External Inspiration
 

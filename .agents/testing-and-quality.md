@@ -11,6 +11,8 @@ make lint
 make test
 make integration-test
 make verify
+make smoke
+make docker-build
 ```
 
 Equivalent Maven commands:
@@ -51,6 +53,16 @@ Surefire runs fast tests. Failsafe runs integration tests.
 - Google Checkstyle
 
 Checkstyle warnings are build failures. Do not ignore them.
+
+## Docker Checks
+
+The Dockerfile is part of the template. When changing packaging, Maven coordinates, runtime classpath, or Java versions, run:
+
+```bash
+make docker-build
+```
+
+The image expects environment variables matching `.env.example`.
 
 ## Formatting
 

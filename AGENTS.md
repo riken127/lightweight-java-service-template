@@ -12,6 +12,15 @@ Read this file first. Then read the focused guides under `.agents/` before chang
 - `.agents/dependency-policy.md`: dependency rules, approved stack, and dependency decision template.
 - `.agents/template-customization.md`: how to rename and adapt this repository after using it as a GitHub template.
 
+Repository hygiene files are part of the template contract too:
+
+- `CONTRIBUTING.md`: contribution expectations.
+- `SECURITY.md`: vulnerability reporting.
+- `CODEOWNERS`: ownership placeholder.
+- `.github/dependabot.yml`: dependency update automation.
+- `.github/pull_request_template.md`: PR checklist.
+- `.github/ISSUE_TEMPLATE/`: issue intake forms.
+
 ## Repository Intent
 
 This repository provides a minimal, production-oriented starting point for small Java services.
@@ -109,6 +118,7 @@ When in doubt, keep the dependency closer to the outside edge. Domain code shoul
 - `Makefile` targets are convenience wrappers; Maven remains the source of truth.
 - Do not introduce parent POM complexity beyond what this template needs.
 - Do not add formatting rules that fight Google Java Format.
+- Keep Docker packaging aligned with the app artifact and documented environment variables.
 
 ## Dependency Rules
 

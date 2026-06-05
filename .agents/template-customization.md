@@ -10,6 +10,8 @@ Use this guide after clicking **Use this template** on GitHub.
 4. Update Docker Compose database names if desired.
 5. Run `make verify`.
 
+Copy `.env.example` only as a local reference. Do not commit real `.env` files.
+
 ## Rename the Package
 
 Default package:
@@ -68,6 +70,7 @@ Keep:
 Add only what your runtime environment actually needs:
 
 - deployment packaging
+- container registry publishing
 - secret injection
 - metrics
 - tracing
