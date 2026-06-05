@@ -8,6 +8,7 @@ Maven is the source of truth. The Makefile is a convenience layer.
 make format
 make format-check
 make lint
+make grpc-generate
 make test
 make integration-test
 make verify
@@ -21,6 +22,7 @@ Equivalent Maven commands:
 ./mvnw spotless:apply
 ./mvnw spotless:check
 ./mvnw checkstyle:check -DskipTests -DskipITs
+./mvnw -pl app protobuf:compile protobuf:compile-custom
 ./mvnw test
 ./mvnw -DskipTests failsafe:integration-test failsafe:verify
 ./mvnw clean verify
@@ -39,6 +41,7 @@ Surefire runs fast tests. Failsafe runs integration tests.
 - Prefer real objects and small fakes.
 - Avoid Mockito unless interaction verification is genuinely clearer.
 - Keep HTTP tests black-box at the route level.
+- Keep gRPC adapter tests in-process with generated stubs.
 - Keep database tests realistic with Testcontainers.
 
 ## Quality Gates
@@ -46,6 +49,7 @@ Surefire runs fast tests. Failsafe runs integration tests.
 `make verify` must pass:
 
 - compilation
+- protobuf and gRPC stub generation
 - fast tests
 - integration tests
 - jar packaging

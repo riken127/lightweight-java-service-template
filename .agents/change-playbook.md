@@ -19,6 +19,25 @@ Avoid:
 - Business decisions in handlers.
 - Returning domain records directly when the HTTP shape is likely to diverge.
 
+## Add a New gRPC Method
+
+1. Add or update a proto contract under `app/src/main/proto`.
+2. Generate sources with `make grpc-generate` or run any Maven compile/test command.
+3. Implement the generated service base class under `grpc`.
+4. Keep protobuf-to-domain mapping in `grpc`.
+5. Put decisions and orchestration in `application`.
+6. Register the service in `GrpcServerFactory`.
+7. Add an in-process gRPC test.
+8. Run `make format`.
+9. Run `make test`.
+
+Avoid:
+
+- Business decisions in gRPC service classes.
+- Passing protobuf messages into `application` or `domain`.
+- Depending on generated gRPC classes from persistence code.
+- Adding a gRPC wrapper framework.
+
 ## Add a New Use Case
 
 1. Add an application service under `application`.
@@ -71,6 +90,7 @@ Safe defaults are fine for local development. Secrets must come from environment
 When turning the template into a real service, deleting example code is encouraged:
 
 - Delete `/v1/example`.
+- Delete the `ExampleItemsApi` proto and gRPC adapter if the service does not need gRPC.
 - Delete example DTOs.
 - Delete `ExampleService`.
 - Delete `ExampleItem`.

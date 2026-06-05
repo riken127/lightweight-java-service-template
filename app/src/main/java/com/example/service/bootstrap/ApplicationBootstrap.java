@@ -3,12 +3,14 @@ package com.example.service.bootstrap;
 import com.example.service.application.ExampleService;
 import com.example.service.config.AppConfig;
 import com.example.service.config.DatabaseConfig;
+import com.example.service.grpc.GrpcServerFactory;
 import com.example.service.http.HttpServerFactory;
 import com.example.service.observability.ReadinessCheck;
 import com.example.service.persistence.DatabaseReadinessCheck;
 import com.example.service.persistence.JooqExampleItemRepository;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import io.grpc.Server;
 import io.javalin.Javalin;
 import java.util.List;
 import org.flywaydb.core.Flyway;
@@ -38,7 +40,9 @@ public final class ApplicationBootstrap {
 
     Javalin server =
         HttpServerFactory.create(config.serviceName(), exampleService, readinessChecks);
-    return new Application(server, dataSource, config.server().port());
+    Server grpcServer =
+        GrpcServerFactory.create(config.grpc().port(), config.serviceName(), exampleService);
+    return new Application(server, grpcServer, dataSource, config.server().port());
   }
 
   static HikariDataSource createDataSource(DatabaseConfig database) {

@@ -24,5 +24,6 @@ COPY --from=build /workspace/app/target/dependency /app/lib
 
 USER app
 EXPOSE 8080
+EXPOSE 9090
 
 ENTRYPOINT ["sh", "-c", "exec java ${JAVA_OPTS:-} -cp '/app/app.jar:/app/lib/*' com.example.service.Main"]

@@ -7,13 +7,13 @@ This is a template, not a framework. Click **Use this template**, rename the ser
 Suggested GitHub description:
 
 ```txt
-Lightweight Java 25 microservice template with Maven, Javalin, jOOQ, PostgreSQL, Flyway, Testcontainers, and Google Java Style.
+Lightweight Java 25 microservice template with Maven, Javalin, gRPC, jOOQ, PostgreSQL, Flyway, Testcontainers, and Google Java Style.
 ```
 
 Suggested GitHub topics:
 
 ```txt
-java, microservice-template, maven, javalin, jooq, postgresql, flyway, testcontainers, google-java-format, no-spring
+java, microservice-template, maven, javalin, grpc, protobuf, jooq, postgresql, flyway, testcontainers, google-java-format, no-spring
 ```
 
 ## Philosophy
@@ -41,7 +41,7 @@ It avoids:
 ## What this is
 
 - A Maven-based Java 25 service template.
-- A single deployable Javalin HTTP service.
+- A single deployable service with Javalin HTTP and direct grpc-java endpoints.
 - A minimal PostgreSQL data-access pattern using HikariCP, Flyway, and jOOQ.
 - A small testing setup with fast unit/HTTP tests and Testcontainers integration tests.
 - A baseline for local development, CI, logging, graceful shutdown, and health/readiness checks.
@@ -87,6 +87,7 @@ com.example.service
 ├── bootstrap/
 ├── config/
 ├── http/
+├── grpc/
 ├── application/
 ├── domain/
 ├── persistence/
@@ -96,6 +97,7 @@ com.example.service
 - `bootstrap`: application wiring, dependency construction, migrations, server startup, graceful shutdown.
 - `config`: environment variable parsing and validation.
 - `http`: Javalin routes, DTOs, request/response mapping, central error mapping.
+- `grpc`: protobuf service adapters, request mapping, gRPC status mapping, and gRPC server setup.
 - `application`: use-case orchestration and repository interfaces.
 - `domain`: framework-free domain records and rules.
 - `persistence`: jOOQ and database-specific repository implementations.
@@ -106,6 +108,8 @@ com.example.service
 - Java 25: current baseline for this template.
 - Maven: predictable Java build tool, easy CI caching, widely understood by Java teams.
 - Javalin: lightweight HTTP layer without a full application framework.
+- grpc-java: direct RPC support without adding a second application framework.
+- Protobuf Maven Plugin: generates protobuf messages and grpc-java service stubs from `src/main/proto`.
 - Jackson: JSON serialization and Java time support.
 - jOOQ: explicit SQL access with a fluent API.
 - HikariCP: small, mature JDBC connection pool.
@@ -138,6 +142,7 @@ Configuration is read from environment variables with safe local defaults:
 | --- | --- |
 | `SERVICE_NAME` | `service-template` |
 | `HTTP_PORT` | `8080` |
+| `GRPC_PORT` | `9090` |
 | `DATABASE_URL` | `jdbc:postgresql://localhost:5432/service_template` |
 | `DATABASE_USERNAME` | `service_template` |
 | `DATABASE_PASSWORD` | `service_template` |
@@ -175,6 +180,12 @@ Then call:
 curl http://localhost:8080/health
 curl http://localhost:8080/ready
 curl http://localhost:8080/v1/example
+```
+
+The gRPC server listens on `9090` by default and exposes the standard gRPC health and reflection services. The example service contract lives at:
+
+```txt
+app/src/main/proto/com/example/service/v1/example_items.proto
 ```
 
 You can also smoke-test the default local endpoints:
@@ -223,6 +234,23 @@ Package rename checklist:
 4. Put orchestration in `application`, not in the route handler.
 5. Add an HTTP test.
 
+## Add a gRPC Method
+
+1. Add or update a `.proto` file under `app/src/main/proto`.
+2. Run `make grpc-generate` or any Maven compile/test command.
+3. Implement the generated service base class in `grpc`.
+4. Map protobuf messages to application inputs and domain outputs.
+5. Keep business rules in `application`, not in the gRPC service implementation.
+6. Register the service in `GrpcServerFactory`.
+7. Add an in-process gRPC test.
+
+The default gRPC workflow uses direct grpc-java rather than a framework:
+
+- `grpc-netty-shaded` provides the runtime HTTP/2 transport.
+- `grpc-protobuf` and `grpc-stub` support generated protobuf services.
+- `grpc-services` provides standard health and reflection services.
+- `grpc-inprocess` keeps adapter tests fast and socket-free.
+
 ## Add an Application Service
 
 1. Create a service class in `application`.
@@ -270,6 +298,18 @@ Errors return JSON with:
 }
 ```
 
+## gRPC Endpoints
+
+The template includes one tiny technical gRPC example:
+
+```txt
+example.service.v1.ExampleItemsApi/ListExampleItems
+```
+
+It delegates to the same `ExampleService` used by HTTP, so HTTP and gRPC remain adapters over the same application boundary. Invalid request input is mapped to `INVALID_ARGUMENT`; unexpected runtime failures are logged and returned as `INTERNAL` without leaking implementation details.
+
+Request correlation uses the `x-request-id` metadata key when present and returns it in response metadata.
+
 ## Logging
 
 Logback writes to stdout and includes timestamp, level, thread, logger, message, and request id. Request correlation uses the `X-Request-Id` header when present, otherwise it generates one.
@@ -301,6 +341,7 @@ The same workflow is available through:
 
 ```bash
 make format
+make grpc-generate
 make lint
 make verify
 ```
@@ -327,6 +368,7 @@ The container image is intentionally minimal: no Kubernetes manifests, Helm char
 
 - No dependency injection framework: manual constructor wiring is enough here.
 - No generated jOOQ classes: avoids a mandatory codegen step for first use.
+- No gRPC framework wrapper: direct grpc-java keeps RPC behavior explicit.
 - No OpenAPI tooling: add it when an API contract needs publishing.
 - No Kubernetes manifests: deployment targets vary too much for a minimal template.
 - No authentication: security should be service- and platform-specific.

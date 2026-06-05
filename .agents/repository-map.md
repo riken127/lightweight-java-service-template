@@ -31,7 +31,8 @@ Do not add modules unless a real service need appears. A new module should remov
 5. jOOQ creates the SQL DSL context.
 6. Repositories and application services are constructed manually.
 7. `HttpServerFactory` creates Javalin routes and error mapping.
-8. `Application` starts Javalin and closes resources during shutdown.
+8. `GrpcServerFactory` creates grpc-java services, health, reflection, and interceptors.
+9. `Application` starts gRPC and Javalin, then closes resources during shutdown.
 
 ## Package Boundaries
 
@@ -52,6 +53,13 @@ Do not add modules unless a real service need appears. A new module should remov
 - Owns Javalin handlers, DTOs, and error mapping.
 - Must not contain business rules.
 - Must not run SQL directly.
+
+`grpc`
+
+- Owns protobuf service adapters, gRPC status mapping, interceptors, health, and reflection setup.
+- Must not contain business rules.
+- Must not run SQL directly.
+- Must not expose generated protobuf types to `application` or `domain`.
 
 `application`
 
@@ -79,6 +87,7 @@ Do not add modules unless a real service need appears. A new module should remov
 ## Files Agents Commonly Touch
 
 - Add route: `http`, `http/dto`, `HttpServerFactory`, HTTP tests.
+- Add gRPC method: `app/src/main/proto`, `grpc`, `GrpcServerFactory`, in-process gRPC tests.
 - Add use case: `application`, `domain` if needed, unit tests.
 - Add repository: `application` interface, `persistence` implementation, Flyway migration, integration test.
 - Add config: `config`, `README.md`, possibly bootstrap wiring.

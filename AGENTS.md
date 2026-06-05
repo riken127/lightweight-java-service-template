@@ -11,6 +11,7 @@ Read this file first. Then read the focused guides under `.agents/` before chang
 - `.agents/testing-and-quality.md`: test strategy, Makefile targets, Maven checks, and verification expectations.
 - `.agents/dependency-policy.md`: dependency rules, approved stack, and dependency decision template.
 - `.agents/template-customization.md`: how to rename and adapt this repository after using it as a GitHub template.
+- `.agents/messaging.md`: how agents should add messaging without turning it into default platform code.
 
 Repository hygiene files are part of the template contract too:
 
@@ -30,6 +31,7 @@ It should provide:
 - explicit application bootstrap
 - clear package boundaries
 - minimal HTTP routing
+- direct grpc-java endpoints
 - small database access example
 - local PostgreSQL setup
 - realistic tests
@@ -43,6 +45,7 @@ It should not provide:
 - a platform monorepo
 - enterprise boilerplate
 - unnecessary code generation
+- messaging infrastructure unless a real service needs it
 - deployment manifests for platforms the service does not actually use
 - abstractions added only because a future service might need them
 
@@ -55,7 +58,7 @@ It should not provide:
 5. Do not make domain classes depend on Javalin, Jackson, jOOQ, JDBC, Flyway, HikariCP, or database APIs.
 6. Do not introduce static service locators, global mutable registries, reflection-heavy wiring, or annotation-driven dependency injection.
 7. Do not create fake business domains. The `example_items` table is a technical example only.
-8. Do not add Kubernetes, service mesh, Backstage, OpenAPI, tracing, authentication, or authorization by default.
+8. Do not add Kubernetes, service mesh, Backstage, OpenAPI, tracing, authentication, authorization, or messaging brokers by default.
 9. Do not replace Maven with Gradle.
 10. Do not weaken tests, formatting, linting, or CI to make a change pass.
 11. Keep the README updated when commands, structure, dependencies, or workflows change.
@@ -83,6 +86,7 @@ The package boundary is part of the template contract:
 - `bootstrap`: dependency construction, Flyway migration, Javalin startup, graceful shutdown.
 - `config`: environment variable parsing and validation.
 - `http`: Javalin routes, DTOs, request mapping, response mapping, error mapping.
+- `grpc`: protobuf service adapters, gRPC status mapping, interceptors, and server setup.
 - `application`: use-case orchestration and repository interfaces.
 - `domain`: framework-free domain records and rules.
 - `persistence`: jOOQ usage, SQL mapping, database-specific implementations.
@@ -91,6 +95,7 @@ The package boundary is part of the template contract:
 Dependency direction:
 
 - `http` may depend on `application`, DTOs, and observability helpers.
+- `grpc` may depend on generated protobuf types, `application`, and observability helpers.
 - `application` may depend on `domain` and repository interfaces.
 - `domain` must not depend on other application packages.
 - `persistence` may depend on `application` interfaces and `domain` records.
@@ -104,6 +109,7 @@ When in doubt, keep the dependency closer to the outside edge. Domain code shoul
 - `make verify` must run the full suite, including integration tests, formatting, and linting.
 - Unit tests must not require PostgreSQL or Docker.
 - HTTP tests should start Javalin on a random port.
+- gRPC tests should prefer `grpc-inprocess` and generated stubs.
 - Database tests should use Testcontainers and be named `*IntegrationTest`.
 - Use AssertJ for assertions.
 - Avoid Mockito unless a real object or small fake would make the test meaningfully worse.
@@ -119,6 +125,7 @@ When in doubt, keep the dependency closer to the outside edge. Domain code shoul
 - Do not introduce parent POM complexity beyond what this template needs.
 - Do not add formatting rules that fight Google Java Format.
 - Keep Docker packaging aligned with the app artifact and documented environment variables.
+- Keep protobuf generation as part of normal Maven compile/test workflows.
 
 ## Dependency Rules
 
@@ -143,6 +150,8 @@ Allowed by default because they are part of the template baseline:
 - JUnit 5
 - AssertJ
 - Testcontainers
+- grpc-java
+- protobuf-maven-plugin
 - Spotless
 - Checkstyle
 
@@ -159,6 +168,16 @@ Adding a route:
 5. Register wiring in `bootstrap`.
 6. Add or update HTTP tests.
 
+Adding a gRPC method:
+
+1. Add or update the proto contract under `app/src/main/proto`.
+2. Keep generated sources out of version control.
+3. Implement the generated service base class in `grpc`.
+4. Translate protobuf messages at the adapter boundary.
+5. Put orchestration and rules in `application`.
+6. Register the service in `GrpcServerFactory`.
+7. Add an in-process gRPC test.
+
 Adding database behavior:
 
 1. Add a Flyway migration.
@@ -174,6 +193,14 @@ Changing configuration:
 3. Validate it close to the config record.
 4. Document the environment variable in the README.
 5. Add a test if parsing or validation is non-trivial.
+
+Adding messaging:
+
+1. Read `.agents/messaging.md` first.
+2. Do not add Kafka, NATS, RabbitMQ, SQS, Pub/Sub, or another broker client until the service has a concrete asynchronous workflow.
+3. Keep message handlers as adapters. They may parse messages and call `application`; they must not own business rules.
+4. Define idempotency, retry, and dead-letter behavior before writing consumer code.
+5. Add integration tests with Testcontainers or a broker emulator when broker semantics matter.
 
 ## Commit Rules
 

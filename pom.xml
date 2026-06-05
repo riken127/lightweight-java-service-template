@@ -23,6 +23,7 @@
 
     <assertj.version>3.27.7</assertj.version>
     <flyway.version>11.20.1</flyway.version>
+    <grpc.version>1.81.0</grpc.version>
     <hikari.version>7.0.2</hikari.version>
     <jackson.version>2.21.1</jackson.version>
     <javalin.version>7.2.2</javalin.version>
@@ -30,6 +31,7 @@
     <junit.version>5.14.4</junit.version>
     <logback.version>1.5.25</logback.version>
     <postgresql.version>42.7.11</postgresql.version>
+    <protoc.version>3.25.8</protoc.version>
     <slf4j.version>2.0.17</slf4j.version>
     <testcontainers.version>1.21.4</testcontainers.version>
 
@@ -41,6 +43,8 @@
     <maven.exec.plugin.version>3.5.0</maven.exec.plugin.version>
     <maven.failsafe.plugin.version>3.5.3</maven.failsafe.plugin.version>
     <maven.surefire.plugin.version>3.5.3</maven.surefire.plugin.version>
+    <os.maven.plugin.version>1.7.1</os.maven.plugin.version>
+    <protobuf.maven.plugin.version>0.6.1</protobuf.maven.plugin.version>
     <spotless.maven.plugin.version>3.6.0</spotless.maven.plugin.version>
   </properties>
 
@@ -51,6 +55,14 @@
         <groupId>org.junit</groupId>
         <artifactId>junit-bom</artifactId>
         <version>${junit.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- Keeps grpc-java runtime, protobuf, stubs, and testing artifacts aligned. -->
+      <dependency>
+        <groupId>io.grpc</groupId>
+        <artifactId>grpc-bom</artifactId>
+        <version>${grpc.version}</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -102,6 +114,25 @@
           <configuration>
             <mainClass>com.example.service.Main</mainClass>
           </configuration>
+        </plugin>
+        <!-- Generates Java message types and grpc-java stubs from src/main/proto. -->
+        <plugin>
+          <groupId>org.xolstice.maven.plugins</groupId>
+          <artifactId>protobuf-maven-plugin</artifactId>
+          <version>${protobuf.maven.plugin.version}</version>
+          <configuration>
+            <protocArtifact>com.google.protobuf:protoc:${protoc.version}:exe:${os.detected.classifier}</protocArtifact>
+            <pluginId>grpc-java</pluginId>
+            <pluginArtifact>io.grpc:protoc-gen-grpc-java:${grpc.version}:exe:${os.detected.classifier}</pluginArtifact>
+          </configuration>
+          <executions>
+            <execution>
+              <goals>
+                <goal>compile</goal>
+                <goal>compile-custom</goal>
+              </goals>
+            </execution>
+          </executions>
         </plugin>
         <!-- Enforces Google Java Format's compact 2-space style in verify. -->
         <plugin>

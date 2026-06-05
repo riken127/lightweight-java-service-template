@@ -15,6 +15,7 @@ public final class EnvironmentConfig {
     return new AppConfig(
         string(environment, "SERVICE_NAME", "service-template"),
         new ServerConfig(integer(environment, "HTTP_PORT", 8080)),
+        new GrpcConfig(integer(environment, "GRPC_PORT", 9090)),
         new DatabaseConfig(
             string(
                 environment, "DATABASE_URL", "jdbc:postgresql://localhost:5432/service_template"),

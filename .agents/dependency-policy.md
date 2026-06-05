@@ -40,6 +40,7 @@ Do not add:
 Runtime:
 
 - Javalin: lightweight HTTP server.
+- grpc-java: direct RPC server support without a second application framework.
 - Jackson: JSON mapping.
 - jOOQ: explicit SQL access.
 - HikariCP: JDBC connection pooling.
@@ -52,9 +53,11 @@ Test:
 - JUnit 5: test framework.
 - AssertJ: fluent assertions.
 - Testcontainers: realistic PostgreSQL integration tests.
+- grpc-inprocess: fast gRPC adapter tests without sockets.
 
 Build:
 
+- Protobuf Maven Plugin: generates protobuf messages and grpc-java stubs.
 - Spotless: Google Java Format enforcement.
 - Checkstyle: Google lint rules.
 
@@ -73,6 +76,10 @@ Tests/docs updated:
 ```
 
 ## When Code Generation Is Acceptable
+
+Protobuf and grpc-java code generation is part of the baseline because gRPC contracts require generated message and service types.
+
+Generated protobuf and gRPC sources must stay out of version control.
 
 jOOQ code generation can be introduced when:
 

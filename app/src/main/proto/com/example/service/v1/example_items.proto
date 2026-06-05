@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package example.service.v1;
+
+option java_multiple_files = true;
+option java_outer_classname = "ExampleItemsProto";
+option java_package = "com.example.service.grpc.proto";
+
+import "google/protobuf/timestamp.proto";
+
+service ExampleItemsApi {
+  rpc ListExampleItems(ListExampleItemsRequest) returns (ListExampleItemsResponse);
+}
+
+message ListExampleItemsRequest {
+  optional int32 limit = 1;
+}
+
+message ListExampleItemsResponse {
+  repeated ExampleItem items = 1;
+}
+
+message ExampleItem {
+  string id = 1;
+  string name = 2;
+  google.protobuf.Timestamp created_at = 3;
+}

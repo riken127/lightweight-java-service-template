@@ -13,6 +13,7 @@ class EnvironmentConfigTest {
 
     assertThat(config.serviceName()).isEqualTo("service-template");
     assertThat(config.server().port()).isEqualTo(8080);
+    assertThat(config.grpc().port()).isEqualTo(9090);
     assertThat(config.database().url())
         .isEqualTo("jdbc:postgresql://localhost:5432/service_template");
     assertThat(config.database().username()).isEqualTo("service_template");
@@ -30,6 +31,8 @@ class EnvironmentConfigTest {
                 "orders",
                 "HTTP_PORT",
                 "9090",
+                "GRPC_PORT",
+                "9191",
                 "DATABASE_URL",
                 "jdbc:postgresql://db:5432/orders",
                 "DATABASE_USERNAME",
@@ -43,6 +46,7 @@ class EnvironmentConfigTest {
 
     assertThat(config.serviceName()).isEqualTo("orders");
     assertThat(config.server().port()).isEqualTo(9090);
+    assertThat(config.grpc().port()).isEqualTo(9191);
     assertThat(config.database().url()).isEqualTo("jdbc:postgresql://db:5432/orders");
     assertThat(config.database().username()).isEqualTo("orders_user");
     assertThat(config.database().password()).isEqualTo("secret");

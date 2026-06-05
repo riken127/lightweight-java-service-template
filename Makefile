@@ -2,13 +2,14 @@ SHELL := /bin/sh
 
 .DEFAULT_GOAL := help
 
-.PHONY: help format format-check lint test integration-test verify clean run dev smoke docker-build postgres-up postgres-down
+.PHONY: help format format-check lint grpc-generate test integration-test verify clean run dev smoke docker-build postgres-up postgres-down
 
 help:
 	@printf '%s\n' 'Common development targets:'
 	@printf '  %-18s %s\n' 'make format' 'Apply Google Java Format with Spotless'
 	@printf '  %-18s %s\n' 'make format-check' 'Check Google Java Format without rewriting files'
 	@printf '  %-18s %s\n' 'make lint' 'Run Google Checkstyle'
+	@printf '  %-18s %s\n' 'make grpc-generate' 'Generate protobuf and gRPC Java sources'
 	@printf '  %-18s %s\n' 'make test' 'Run fast unit and HTTP tests'
 	@printf '  %-18s %s\n' 'make integration-test' 'Run Testcontainers PostgreSQL integration tests'
 	@printf '  %-18s %s\n' 'make verify' 'Run the full build, tests, formatting, and linting'
@@ -28,6 +29,9 @@ format-check:
 
 lint:
 	./mvnw checkstyle:check -DskipTests -DskipITs
+
+grpc-generate:
+	./mvnw -pl app protobuf:compile protobuf:compile-custom
 
 test:
 	./mvnw test
