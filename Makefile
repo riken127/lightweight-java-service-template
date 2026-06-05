@@ -2,7 +2,7 @@ SHELL := /bin/sh
 
 .DEFAULT_GOAL := help
 
-.PHONY: help format format-check lint test integration-test verify clean run postgres-up postgres-down
+.PHONY: help format format-check lint test integration-test verify clean run dev smoke docker-build postgres-up postgres-down
 
 help:
 	@printf '%s\n' 'Common development targets:'
@@ -13,6 +13,9 @@ help:
 	@printf '  %-18s %s\n' 'make integration-test' 'Run Testcontainers PostgreSQL integration tests'
 	@printf '  %-18s %s\n' 'make verify' 'Run the full build, tests, formatting, and linting'
 	@printf '  %-18s %s\n' 'make run' 'Start the service locally'
+	@printf '  %-18s %s\n' 'make dev' 'Start PostgreSQL, then start the service'
+	@printf '  %-18s %s\n' 'make smoke' 'Call local health and readiness endpoints'
+	@printf '  %-18s %s\n' 'make docker-build' 'Build the service container image'
 	@printf '  %-18s %s\n' 'make postgres-up' 'Start local PostgreSQL'
 	@printf '  %-18s %s\n' 'make postgres-down' 'Stop local PostgreSQL'
 	@printf '  %-18s %s\n' 'make clean' 'Remove Maven build output'
@@ -40,6 +43,15 @@ clean:
 
 run:
 	./mvnw -pl app exec:java
+
+dev: postgres-up run
+
+smoke:
+	curl --fail --silent --show-error http://localhost:8080/health
+	curl --fail --silent --show-error http://localhost:8080/ready
+
+docker-build:
+	docker build -t service-template:local .
 
 postgres-up:
 	docker compose up -d postgres

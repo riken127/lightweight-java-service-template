@@ -22,6 +22,13 @@
       <groupId>io.javalin</groupId>
       <artifactId>javalin</artifactId>
       <version>${javalin.version}</version>
+      <exclusions>
+        <!-- This template does not expose websocket routes; excluding it avoids Jetty annotation/CDI runtime baggage. -->
+        <exclusion>
+          <groupId>org.eclipse.jetty.ee10.websocket</groupId>
+          <artifactId>jetty-ee10-websocket-jetty-server</artifactId>
+        </exclusion>
+      </exclusions>
     </dependency>
     <!-- JSON object mapping used by Javalin responses and request DTOs. -->
     <dependency>
