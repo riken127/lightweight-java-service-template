@@ -9,6 +9,7 @@ Start here:
 3. Read `change-playbook.md` for the kind of change you are making.
 4. Read `testing-and-quality.md` before running or changing tests.
 5. Read `dependency-policy.md` before touching dependencies.
+6. Read `messaging.md` before adding publishers, consumers, broker clients, or async workers.
 
 The goal is to make agent behavior predictable: small changes, clear boundaries, no framework drift, no fake product code.
 
