@@ -1,0 +1,24 @@
+name: Template enhancement
+description: Suggest a small improvement to the service template.
+title: "feat: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposal
+      description: What should change?
+    validations:
+      required: true
+  - type: textarea
+    id: lightweight-fit
+    attributes:
+      label: Why this fits a lightweight template
+      description: Explain why this is not framework or platform creep.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered

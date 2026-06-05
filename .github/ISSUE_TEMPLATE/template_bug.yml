@@ -1,0 +1,28 @@
+name: Template bug
+description: Report something broken in the microservice template.
+title: "fix: "
+labels:
+  - bug
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What is broken or misleading?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction
+      description: Commands or steps that reproduce the issue.
+      placeholder: |
+        make verify
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
