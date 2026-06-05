@@ -1,0 +1,16 @@
+.DS_Store
+.idea/
+*.iml
+.vscode/
+.rtk/
+CLAUDE.md
+RTK.md
+
+target/
+*.log
+
+.env
+.env.*
+!.env.example
+
+docker-compose.override.yml
