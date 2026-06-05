@@ -4,9 +4,20 @@ Use this guide after clicking **Use this template** on GitHub.
 
 ## Rename the Service
 
+Prefer the initialization script for a new repository:
+
+```bash
+scripts/init-template.sh \
+  --service-name orders-service \
+  --package com.acme.orders \
+  --group-id com.acme
+```
+
+If renaming manually:
+
 1. Update Maven coordinates in `pom.xml` and `app/pom.xml`.
 2. Update `SERVICE_NAME` defaults in `EnvironmentConfig`.
-3. Update README references.
+3. Update README and `docs/` references.
 4. Update Docker Compose database names if desired.
 5. Run `make verify`.
 

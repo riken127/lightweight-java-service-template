@@ -15,6 +15,9 @@ Read this file first. Then read the focused guides under `.agents/` before chang
 
 Repository hygiene files are part of the template contract too:
 
+- `docs/architecture.md`: philosophy, structure decision, package boundaries, dependency choices, and omissions.
+- `docs/template-usage.md`: initialization, local development, and common extension workflows.
+- `scripts/init-template.sh`: template initialization helper for package/service rename.
 - `CONTRIBUTING.md`: contribution expectations.
 - `SECURITY.md`: vulnerability reporting.
 - `CODEOWNERS`: ownership placeholder.
@@ -226,6 +229,7 @@ Keep commits atomic:
 - `make format` was run after Java edits.
 - `make verify` passes, unless the user explicitly asked for a narrower check.
 - README is still accurate.
+- `docs/` are still accurate.
 - `.agents/` guidance is still accurate.
 - No local secrets or machine-specific files are staged.
 - No banned dependencies were introduced.

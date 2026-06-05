@@ -7,6 +7,8 @@ This repository is one deployable Java service template with one Maven app modul
 ├── app/
 │   ├── pom.xml
 │   └── src/
+├── docs/
+├── scripts/
 ├── pom.xml
 ├── Makefile
 ├── docker-compose.yml
@@ -90,5 +92,6 @@ Do not add modules unless a real service need appears. A new module should remov
 - Add gRPC method: `app/src/main/proto`, `grpc`, `GrpcServerFactory`, in-process gRPC tests.
 - Add use case: `application`, `domain` if needed, unit tests.
 - Add repository: `application` interface, `persistence` implementation, Flyway migration, integration test.
-- Add config: `config`, `README.md`, possibly bootstrap wiring.
-- Add dependency: `pom.xml`, `app/pom.xml`, `README.md`, `AGENTS.md` if policy changes.
+- Add config: `config`, `docs/template-usage.md`, possibly bootstrap wiring.
+- Add dependency: `pom.xml`, `app/pom.xml`, `docs/architecture.md`, `AGENTS.md` if policy changes.
+- Change template initialization: `scripts/init-template.sh`, `docs/template-usage.md`, `.agents/template-customization.md`.

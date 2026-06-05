@@ -15,6 +15,9 @@ The goal is to make agent behavior predictable: small changes, clear boundaries,
 
 Also check the repository hygiene files when relevant:
 
+- `docs/architecture.md`
+- `docs/template-usage.md`
+- `scripts/init-template.sh`
 - `CONTRIBUTING.md`
 - `SECURITY.md`
 - `CODEOWNERS`
