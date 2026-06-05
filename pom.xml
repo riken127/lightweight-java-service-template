@@ -22,7 +22,7 @@
     <maven.compiler.release>${java.version}</maven.compiler.release>
 
     <assertj.version>3.27.7</assertj.version>
-    <flyway.version>11.20.1</flyway.version>
+    <flyway.version>12.8.1</flyway.version>
     <grpc.version>1.81.0</grpc.version>
     <hikari.version>7.0.2</hikari.version>
     <jackson.version>2.21.1</jackson.version>
