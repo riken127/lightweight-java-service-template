@@ -32,7 +32,7 @@
     <logback.version>1.5.25</logback.version>
     <postgresql.version>42.7.11</postgresql.version>
     <protoc.version>3.25.8</protoc.version>
-    <slf4j.version>2.0.17</slf4j.version>
+    <slf4j.version>2.0.18</slf4j.version>
     <testcontainers.version>1.21.4</testcontainers.version>
 
     <checkstyle.version>13.4.2</checkstyle.version>
